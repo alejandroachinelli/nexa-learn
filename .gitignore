@@ -1,0 +1,48 @@
+# Dependencias
+node_modules/
+.npm
+
+# .NET
+bin/
+obj/
+*.user
+.vs/
+.vscode/settings.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Variables de entorno - NUNCA al repositorio
+.env
+.env.local
+.env.*.local
+*.env
+
+# Docker
+.docker/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Builds
+dist/
+build/
+out/
+publish/
