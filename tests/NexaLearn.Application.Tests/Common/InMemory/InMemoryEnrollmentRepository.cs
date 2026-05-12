@@ -19,4 +19,6 @@ public class InMemoryEnrollmentRepository : IEnrollmentRepository
         _enrollments.Add(enrollment);
         return Task.CompletedTask;
     }
+
+    public void Update(Enrollment enrollment) { }
 }
