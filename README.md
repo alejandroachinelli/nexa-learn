@@ -171,7 +171,7 @@ nexa-learn/
 | Etapa | Contenido | Estado |
 |---|---|---|
 | **Etapa 1 — Domain layer** | Entidades, Value Objects, Result Pattern, Domain Events, interfaces de repositorio | **Completa — 118 tests en verde** |
-| **Etapa 2 — Application layer** | CQRS con MediatR, commands, queries, validators, DTOs | En progreso |
+| **Etapa 2 — Application layer** | CQRS con MediatR, commands, queries, validators, DTOs | **Completa — 198 tests en verde** |
 | **Etapa 3 — Infrastructure** | EF Core, PostgreSQL, repositorios concretos, Testcontainers | Pendiente |
 | **Etapa 4 — API + seguridad** | Minimal APIs, JWT, Pipeline Behaviors, manejo de errores | Pendiente |
 | **Etapa 5 — Observabilidad** | Outbox Pattern, OpenTelemetry, GitHub Actions CI | Pendiente |
