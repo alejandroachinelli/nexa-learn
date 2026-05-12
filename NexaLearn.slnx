@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/NexaLearn.Application/NexaLearn.Application.csproj" />
     <Project Path="src/NexaLearn.Domain/NexaLearn.Domain.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/NexaLearn.Application.Tests/NexaLearn.Application.Tests.csproj" />
     <Project Path="tests/NexaLearn.Domain.Tests/NexaLearn.Domain.Tests.csproj" />
   </Folder>
 </Solution>
