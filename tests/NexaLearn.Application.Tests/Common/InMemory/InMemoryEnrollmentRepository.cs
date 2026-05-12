@@ -14,6 +14,10 @@ public class InMemoryEnrollmentRepository : IEnrollmentRepository
         Task.FromResult(_enrollments.FirstOrDefault(e =>
             e.StudentId == studentId && e.CourseId == courseId));
 
+    public Task<IReadOnlyList<Enrollment>> GetByStudentAsync(Guid studentId, CancellationToken ct) =>
+        Task.FromResult<IReadOnlyList<Enrollment>>(
+            _enrollments.Where(e => e.StudentId == studentId).ToList());
+
     public Task AddAsync(Enrollment enrollment, CancellationToken ct)
     {
         _enrollments.Add(enrollment);
