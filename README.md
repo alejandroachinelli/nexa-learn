@@ -172,16 +172,16 @@ nexa-learn/
 |---|---|---|
 | **Etapa 1 — Domain layer** | Entidades, Value Objects, Result Pattern, Domain Events, interfaces de repositorio | **Completa — 118 tests en verde** |
 | **Etapa 2 — Application layer** | CQRS con MediatR, commands, queries, validators, DTOs | **Completa — 198 tests en verde** |
-| **Etapa 3 — Infrastructure** | EF Core, PostgreSQL, repositorios concretos, Testcontainers | Pendiente |
-| **Etapa 4 — API + seguridad** | Minimal APIs, JWT, Pipeline Behaviors, manejo de errores | Pendiente |
+| **Etapa 3 — Infrastructure** | EF Core, PostgreSQL, repositorios concretos, Testcontainers | **Completa — 13 tests con PostgreSQL real via Testcontainers** |
+| **Etapa 4 — API + seguridad** | Minimal APIs, JWT, Pipeline Behaviors, manejo de errores | En progreso |
 | **Etapa 5 — Observabilidad** | Outbox Pattern, OpenTelemetry, GitHub Actions CI | Pendiente |
 
 ```
 dotnet test NexaLearn.slnx
 
-Pruebas totales: 118
-     Correcto: 118
- Tiempo total: < 1 segundo
+Pruebas totales: 211
+     Correcto: 211
+ Tiempo total: < 1 segundo (Domain + Application) + ~35s (Infrastructure con Docker)
 ```
 
 ---
