@@ -55,6 +55,9 @@ Clean Architecture con estas capas:
   refactor: extract payment processor interface
   test: add unit tests for order aggregate
 - Branches: feature/nombre-descriptivo, fix/descripcion, docs/tema
+- Los commits siempre se hacen con el autor configurado en git local. No agregar
+  Co-authored-by ni referencias a Claude en los mensajes de commit. El código es
+  mío, Claude es una herramienta de desarrollo como cualquier otra.
 
 ## Cómo trabajo con Claude CLI
 Cuando me ayudás a generar código:
