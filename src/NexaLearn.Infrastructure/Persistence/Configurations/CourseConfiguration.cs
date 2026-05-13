@@ -41,37 +41,13 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
 
         builder.Property(c => c.IsPublished).HasColumnName("is_published");
 
-        // Module y Lesson se configuran como owned many-to-one en tablas separadas.
-        // OwnsMany es correcto porque Module no tiene identidad fuera de Course.
-        builder.OwnsMany(c => c.Modules, moduleBuilder =>
-        {
-            moduleBuilder.ToTable("modules");
-            moduleBuilder.WithOwner().HasForeignKey("course_id");
-            moduleBuilder.HasKey(m => m.Id);
-            moduleBuilder.Property(m => m.Id).HasColumnName("id");
-            moduleBuilder.Property(m => m.Title).HasColumnName("title").HasMaxLength(200).IsRequired();
-            moduleBuilder.Ignore(m => m.HasLessons);
-
-            moduleBuilder.OwnsMany(m => m.Lessons, lessonBuilder =>
-            {
-                lessonBuilder.ToTable("lessons");
-                lessonBuilder.WithOwner().HasForeignKey("module_id");
-                lessonBuilder.HasKey(l => l.Id);
-                lessonBuilder.Property(l => l.Id).HasColumnName("id");
-                lessonBuilder.Property(l => l.Title).HasColumnName("title").HasMaxLength(200).IsRequired();
-
-                // Duration se guarda como int (minutos) — guardamos el dato primitivo, no el VO
-                lessonBuilder.Property(l => l.Duration)
-                    .HasConversion(
-                        d => d.Minutes,
-                        v => Duration.Create(v).Value)
-                    .HasColumnName("duration_minutes")
-                    .IsRequired();
-            });
-
-            moduleBuilder.Navigation(m => m.Lessons)
-                .UsePropertyAccessMode(PropertyAccessMode.Field);
-        });
+        // HasMany (no OwnsMany): Module y Lesson son entidades regulares con FK explícita.
+        // OwnsMany + private backing fields tiene limitaciones en EF Core change tracking
+        // cuando se agregan nuevas entidades a una colección ya trackeada.
+        builder.HasMany(c => c.Modules)
+            .WithOne()
+            .HasForeignKey("course_id")
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(c => c.Modules)
             .UsePropertyAccessMode(PropertyAccessMode.Field);

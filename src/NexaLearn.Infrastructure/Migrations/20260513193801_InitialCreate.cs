@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace NexaLearn.Infrastructure.Persistence.Migrations
+namespace NexaLearn.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -61,7 +61,7 @@ namespace NexaLearn.Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    course_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    course_id = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,7 +81,7 @@ namespace NexaLearn.Infrastructure.Persistence.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     duration_minutes = table.Column<int>(type: "integer", nullable: false),
-                    module_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    module_id = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {

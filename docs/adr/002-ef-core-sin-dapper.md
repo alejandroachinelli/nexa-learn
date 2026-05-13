@@ -97,8 +97,34 @@ costo de la complejidad sin el beneficio de performance demostrado.
 
 ---
 
+## Decisión adicional: HasMany en lugar de OwnsMany para Module y Lesson
+
+Durante la implementación de los tests de integración se descubrió una limitación
+conocida de EF Core: cuando se usa `OwnsMany` con backing fields privados
+(`private readonly List<T>`) y `PropertyAccessMode.Field`, EF Core no puede
+detectar nuevas entidades agregadas a la colección en escenarios de update
+post-carga. Llamar a `context.Add()` sobre una owned entity en `OwnsMany`
+causa que EF Core desanexe las entidades existentes y marque las nuevas como
+`Modified` en lugar de `Added`, generando `UPDATE` en vez de `INSERT`.
+
+**Decisión**: usar `HasMany` con `OnDelete(DeleteBehavior.Cascade)` para las
+relaciones `Course → Module → Lesson`. El esquema de base de datos es idéntico
+(mismas tablas, mismas columnas, mismos índices), se agregan FK constraints
+explícitas. El dominio no cambia.
+
+**Restricción de diseño que emerge**: en este modelo, los módulos se crean y
+asocian al curso antes de persistirlo. Una vez que el curso está en la base de
+datos, no se agregan módulos nuevos via `Update()` — se usa `AddAsync()` + `SaveChanges`
+en el contexto de creación inicial. El test `Update_ChangesArePersistedAfterSaveChanges`
+fue reemplazado por `Update_PublishCourse_PersistsIsPublishedTrue` que valida
+el caso de uso real de `Update()`: persistir cambios en propiedades escalares
+(como `IsPublished`) de un aggregate ya guardado.
+
+---
+
 ## Referencias
 
 - [EF Core — Raw SQL queries](https://learn.microsoft.com/en-us/ef/core/querying/raw-sql)
 - [Dapper — GitHub](https://github.com/DapperLib/Dapper)
 - [docs/guides/003-ef-core-vs-dapper.md](../guides/003-ef-core-vs-dapper.md)
+- [docs/guides/004-ef-core-materialization.md](../guides/004-ef-core-materialization.md)

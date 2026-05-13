@@ -10,6 +10,8 @@ public class NexaLearnDbContext : DbContext
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<Student> Students => Set<Student>();
     public DbSet<Enrollment> Enrollments => Set<Enrollment>();
+    public DbSet<Module> Modules => Set<Module>();
+    public DbSet<Lesson> Lessons => Set<Lesson>();
 
     public NexaLearnDbContext(DbContextOptions<NexaLearnDbContext> options) : base(options)
     {

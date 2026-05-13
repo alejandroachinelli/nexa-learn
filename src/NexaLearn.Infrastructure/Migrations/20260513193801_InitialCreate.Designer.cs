@@ -10,10 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace NexaLearn.Infrastructure.Persistence.Migrations
+namespace NexaLearn.Infrastructure.Migrations
 {
     [DbContext(typeof(NexaLearnDbContext))]
-    [Migration("20260513180954_InitialCreate")]
+    [Migration("20260513193801_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -46,6 +46,56 @@ namespace NexaLearn.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("courses", (string)null);
+                });
+
+            modelBuilder.Entity("NexaLearn.Domain.Aggregates.Courses.Lesson", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("integer")
+                        .HasColumnName("duration_minutes");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("title");
+
+                    b.Property<Guid?>("module_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("module_id");
+
+                    b.ToTable("lessons", (string)null);
+                });
+
+            modelBuilder.Entity("NexaLearn.Domain.Aggregates.Courses.Module", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("title");
+
+                    b.Property<Guid?>("course_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("course_id");
+
+                    b.ToTable("modules", (string)null);
                 });
 
             modelBuilder.Entity("NexaLearn.Domain.Aggregates.Enrollments.Enrollment", b =>
@@ -134,68 +184,34 @@ namespace NexaLearn.Infrastructure.Persistence.Migrations
                                 .HasForeignKey("CourseId");
                         });
 
-                    b.OwnsMany("NexaLearn.Domain.Aggregates.Courses.Module", "Modules", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.Property<string>("Title")
-                                .IsRequired()
-                                .HasMaxLength(200)
-                                .HasColumnType("character varying(200)")
-                                .HasColumnName("title");
-
-                            b1.Property<Guid>("course_id")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("course_id");
-
-                            b1.ToTable("modules", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("course_id");
-
-                            b1.OwnsMany("NexaLearn.Domain.Aggregates.Courses.Lesson", "Lessons", b2 =>
-                                {
-                                    b2.Property<Guid>("Id")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("uuid")
-                                        .HasColumnName("id");
-
-                                    b2.Property<int>("Duration")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("duration_minutes");
-
-                                    b2.Property<string>("Title")
-                                        .IsRequired()
-                                        .HasMaxLength(200)
-                                        .HasColumnType("character varying(200)")
-                                        .HasColumnName("title");
-
-                                    b2.Property<Guid>("module_id")
-                                        .HasColumnType("uuid");
-
-                                    b2.HasKey("Id");
-
-                                    b2.HasIndex("module_id");
-
-                                    b2.ToTable("lessons", (string)null);
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("module_id");
-                                });
-
-                            b1.Navigation("Lessons");
-                        });
-
-                    b.Navigation("Modules");
-
                     b.Navigation("Price")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("NexaLearn.Domain.Aggregates.Courses.Lesson", b =>
+                {
+                    b.HasOne("NexaLearn.Domain.Aggregates.Courses.Module", null)
+                        .WithMany("Lessons")
+                        .HasForeignKey("module_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("NexaLearn.Domain.Aggregates.Courses.Module", b =>
+                {
+                    b.HasOne("NexaLearn.Domain.Aggregates.Courses.Course", null)
+                        .WithMany("Modules")
+                        .HasForeignKey("course_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("NexaLearn.Domain.Aggregates.Courses.Course", b =>
+                {
+                    b.Navigation("Modules");
+                });
+
+            modelBuilder.Entity("NexaLearn.Domain.Aggregates.Courses.Module", b =>
+                {
+                    b.Navigation("Lessons");
                 });
 #pragma warning restore 612, 618
         }
