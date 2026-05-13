@@ -13,6 +13,10 @@ public sealed class Course : AggregateRoot<Guid>
     public bool IsPublished { get; private set; }
     public IReadOnlyList<Module> Modules => _modules.AsReadOnly();
 
+#pragma warning disable CS8618
+    private Course() { } // for EF Core materialization — properties set via backing fields
+#pragma warning restore CS8618
+
     private Course(Guid id, CourseTitle title, Money price) : base(id)
     {
         Title = title;

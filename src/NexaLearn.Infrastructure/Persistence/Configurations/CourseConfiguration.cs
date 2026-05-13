@@ -21,7 +21,7 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
             .HasMaxLength(CourseTitle.MaxLength)
             .IsRequired();
 
-        // Money se mapea como owned entity: dos columnas en la misma tabla
+        // Money se mapea como owned entity: dos columnas en la misma tabla.
         builder.OwnsOne(c => c.Price, money =>
         {
             money.Property(m => m.Amount)
@@ -33,6 +33,11 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
                 .HasMaxLength(3)
                 .IsRequired();
         });
+
+        // UsePropertyAccessMode(Field) después de OwnsOne: Course usa constructor sin
+        // parámetros para EF Core y Price es { get; } — EF Core debe usar el backing field.
+        builder.Navigation(c => c.Price)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
 
         builder.Property(c => c.IsPublished).HasColumnName("is_published");
 
@@ -62,9 +67,6 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
                         v => Duration.Create(v).Value)
                     .HasColumnName("duration_minutes")
                     .IsRequired();
-
-                lessonBuilder.Navigation(l => l.Duration)
-                    .UsePropertyAccessMode(PropertyAccessMode.Field);
             });
 
             moduleBuilder.Navigation(m => m.Lessons)

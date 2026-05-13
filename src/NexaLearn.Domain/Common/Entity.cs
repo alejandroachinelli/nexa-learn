@@ -14,6 +14,10 @@ public abstract class Entity<TId>
     public TId Id { get; }
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
+#pragma warning disable CS8618
+    protected Entity() { } // for EF Core materialization — Id set via backing field
+#pragma warning restore CS8618
+
     protected Entity(TId id) => Id = id;
 
     protected void AddDomainEvent(IDomainEvent domainEvent) =>
