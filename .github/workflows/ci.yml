@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore NexaLearn.slnx
+
+      - name: Build
+        run: dotnet build NexaLearn.slnx --configuration Release --no-restore
+
+      - name: Test — Domain and Application
+        run: |
+          dotnet test tests/NexaLearn.Domain.Tests --configuration Release --no-build \
+            --logger "trx;LogFileName=domain-results.trx" \
+            --results-directory ./test-results
+          dotnet test tests/NexaLearn.Application.Tests --configuration Release --no-build \
+            --logger "trx;LogFileName=application-results.trx" \
+            --results-directory ./test-results
+
+      - name: Test — Infrastructure (Testcontainers + Docker)
+        run: |
+          dotnet test tests/NexaLearn.Infrastructure.Tests --configuration Release --no-build \
+            --logger "trx;LogFileName=infrastructure-results.trx" \
+            --results-directory ./test-results
+
+      - name: Publish test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: ./test-results/*.trx
