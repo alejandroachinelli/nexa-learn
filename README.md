@@ -173,7 +173,7 @@ nexa-learn/
 | **Etapa 1 — Domain layer** | Entidades, Value Objects, Result Pattern, Domain Events, interfaces de repositorio | **Completa — 118 tests en verde** |
 | **Etapa 2 — Application layer** | CQRS con MediatR, commands, queries, validators, DTOs | **Completa — 198 tests en verde** |
 | **Etapa 3 — Infrastructure** | EF Core, PostgreSQL, repositorios concretos, Testcontainers | **Completa — 13 tests con PostgreSQL real via Testcontainers** |
-| **Etapa 4 — API + seguridad** | Minimal APIs, JWT, Pipeline Behaviors, manejo de errores | En progreso |
+| **Etapa 4 — API + seguridad** | Minimal APIs, JWT, Pipeline Behaviors, manejo de errores | **Completa — API REST con 7 endpoints, Scalar docs, JWT auth, GlobalExceptionHandler** |
 | **Etapa 5 — Observabilidad** | Outbox Pattern, OpenTelemetry, GitHub Actions CI | Pendiente |
 
 ```
@@ -181,8 +181,30 @@ dotnet test NexaLearn.slnx
 
 Pruebas totales: 211
      Correcto: 211
- Tiempo total: < 1 segundo (Domain + Application) + ~35s (Infrastructure con Docker)
+ Tiempo total: < 1 segundo (Domain + Application) + ~35s (Infrastructure con Docker, requiere Docker Desktop)
 ```
+
+---
+
+## API en acción
+
+Con la API corriendo en desarrollo, la documentación interactiva está disponible en:
+
+```
+http://localhost:5152/scalar/v1
+```
+
+Endpoints disponibles:
+
+| Método | Ruta | Auth | Descripción |
+|---|---|---|---|
+| GET | `/api/courses` | No | Lista cursos publicados |
+| GET | `/api/courses/{id}` | No | Obtiene un curso por ID |
+| POST | `/api/courses` | JWT | Crea un curso |
+| POST | `/api/courses/{id}/publish` | JWT | Publica un curso |
+| POST | `/api/students` | No | Registra un estudiante |
+| POST | `/api/enrollments` | JWT | Inscribe un estudiante en un curso |
+| POST | `/api/enrollments/{id}/complete-lesson` | JWT | Marca una lección como completada |
 
 ---
 
@@ -197,11 +219,9 @@ docker-compose -f docker/docker-compose.yml up -d
 # Correr los tests
 dotnet test NexaLearn.slnx
 
-# Correr la API (disponible en Etapa 4)
-dotnet run --project src/NexaLearn.Api
+# Correr la API
+dotnet run --project src/NexaLearn.Api --launch-profile http
 ```
-
-La API expone documentación OpenAPI en `/swagger` cuando corre en Development.
 
 ---
 
