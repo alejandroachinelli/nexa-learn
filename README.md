@@ -194,6 +194,10 @@ Con la API corriendo en desarrollo, la documentación interactiva está disponib
 http://localhost:5152/scalar/v1
 ```
 
+![Scalar API Documentation](docs/assets/scalar-screenshot.png)
+
+Documentación interactiva generada automáticamente desde los endpoints. Permite probar todos los endpoints directamente desde el browser.
+
 Endpoints disponibles:
 
 | Método | Ruta | Auth | Descripción |
