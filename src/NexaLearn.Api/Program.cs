@@ -5,6 +5,8 @@ using NexaLearn.Api.Endpoints;
 using NexaLearn.Api.Middleware;
 using NexaLearn.Application;
 using NexaLearn.Infrastructure;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using System.Text;
 
@@ -35,6 +37,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource.AddService("nexalearn-api"))
+    .WithTracing(tracing =>
+    {
+        tracing
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddEntityFrameworkCoreInstrumentation();
+
+        if (builder.Environment.IsDevelopment())
+            tracing.AddConsoleExporter();
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
