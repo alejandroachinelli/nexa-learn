@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NexaLearn.Application.Common.Interfaces;
 using NexaLearn.Domain.Interfaces;
 using NexaLearn.Infrastructure.Persistence;
+using NexaLearn.Infrastructure.Persistence.Outbox;
 using NexaLearn.Infrastructure.Persistence.Repositories;
 
 namespace NexaLearn.Infrastructure;
@@ -15,7 +16,9 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services.AddDbContext<NexaLearnDbContext>(options =>
-            options.UseNpgsql(configuration["ConnectionStrings:Default"]));
+            options
+                .UseNpgsql(configuration["ConnectionStrings:Default"])
+                .AddInterceptors(new OutboxInterceptor()));
 
         services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddScoped<IStudentRepository, StudentRepository>();

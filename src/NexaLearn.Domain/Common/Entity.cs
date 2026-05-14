@@ -6,7 +6,7 @@ namespace NexaLearn.Domain.Common;
 /// cuando se usa la entidad en colecciones o diccionarios. La constraint convierte ese error
 /// de runtime en un error de compilación.
 /// </typeparam>
-public abstract class Entity<TId>
+public abstract class Entity<TId> : IHasDomainEvents
     where TId : notnull
 {
     private readonly List<IDomainEvent> _domainEvents = [];
@@ -22,6 +22,8 @@ public abstract class Entity<TId>
 
     protected void AddDomainEvent(IDomainEvent domainEvent) =>
         _domainEvents.Add(domainEvent);
+
+    public void ClearDomainEvents() => _domainEvents.Clear();
 
     public override bool Equals(object? obj)
     {
