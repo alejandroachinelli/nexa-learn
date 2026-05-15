@@ -289,6 +289,8 @@ estándar. Esta decisión está documentada en el ADR-002.
 - [Guía 002](docs/guides/002-cqrs-y-mediatr.md) — CQRS con MediatR: commands, queries, handlers
 - [Guía 003](docs/guides/003-ef-core-vs-dapper.md) — Cuándo usar EF Core y cuándo Dapper
 - [Guía 004](docs/guides/004-ef-core-materialization.md) — Materialización de entidades en EF Core
+- [Guía 005](docs/guides/005-controllers-vs-minimal-apis.md) — Controllers vs Minimal APIs: cuándo usar cada uno
+- [Guía 006](docs/guides/006-ienumerable-vs-iqueryable.md) — IEnumerable vs IQueryable: la pregunta más frecuente en entrevistas .NET
 
 ---
 
