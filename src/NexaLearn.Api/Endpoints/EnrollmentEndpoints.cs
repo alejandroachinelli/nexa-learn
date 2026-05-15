@@ -5,6 +5,8 @@ namespace NexaLearn.Api.Endpoints;
 
 internal static class EnrollmentEndpoints
 {
+    internal record CompleteLessonRequest(Guid LessonId);
+
     internal static void MapEnrollmentEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/enrollments").WithTags("Enrollments");
@@ -26,14 +28,11 @@ internal static class EnrollmentEndpoints
 
     private static async Task<IResult> CompleteLesson(
         Guid id,
-        CompleteLessonCommand command,
+        CompleteLessonRequest request,
         IMediator mediator,
         CancellationToken ct)
     {
-        if (id != command.EnrollmentId)
-            return Results.Problem("Enrollment ID mismatch", statusCode: StatusCodes.Status400BadRequest);
-
-        var result = await mediator.Send(command, ct);
+        var result = await mediator.Send(new CompleteLessonCommand(id, request.LessonId), ct);
         return result.IsFailure
             ? Results.Problem(result.Error, statusCode: StatusCodes.Status400BadRequest)
             : Results.NoContent();
